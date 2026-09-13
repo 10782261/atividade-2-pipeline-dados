@@ -34,4 +34,22 @@ CREATE EXTERNAL TABLE atividade2.pedidos (
     quantidade INT
 )
 PARTITIONED BY (ingest_date STRING)
-ROW FORMAT SERDE 'org.apache.hadoop.hive.
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+    'separatorChar'=','
+)
+STORED AS TEXTFILE
+LOCATION 's3://atividade2-pipeline-mariana10782261-2026/raw/pedidos/';
+
+ALTER TABLE atividade2.clientes
+SET TBLPROPERTIES ('skip.header.line.count'='1');
+
+ALTER TABLE atividade2.produtos
+SET TBLPROPERTIES ('skip.header.line.count'='1');
+
+ALTER TABLE atividade2.pedidos
+SET TBLPROPERTIES ('skip.header.line.count'='1');
+
+MSCK REPAIR TABLE atividade2.clientes;
+MSCK REPAIR TABLE atividade2.produtos;
+MSCK REPAIR TABLE atividade2.pedidos;
